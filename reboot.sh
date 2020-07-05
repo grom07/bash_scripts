@@ -1,0 +1,17 @@
+#!/bin/bash
+
+TEXT_RED_B='\e[1;31m'
+TEXT_GREEN='\e[1;32m'
+
+if [ -f /var/run/reboot-required ]; then
+    echo -e $TEXT_RED_B
+    echo 'Reboot required!'
+    echo ""
+    echo 'Reboot now? (y/n)' && read x && [[ "$x" == "y" ]] && sudo reboot now;
+    echo ""
+    echo -e $TEXT_RESET
+else
+    echo -e $TEXT_GREEN
+    echo 'No reboot required!'
+    echo ""
+fi
