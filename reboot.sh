@@ -12,6 +12,7 @@ if [ -f /var/run/reboot-required ]; then
     echo -e $TEXT_RESET
 else
     echo -e $TEXT_GREEN
-    echo 'No reboot required!'
+    echo 'No reboot required...'
+    printf 'Have a good day \e[33m\U1F600\n'
     echo ""
 fi
