@@ -14,10 +14,10 @@ wget https://raw.githubusercontent.com/grom07/bash_scripts/master/temp.sh
 chmod +x temp.sh
 sudo mv temp.sh /usr/local/bin/temp
 ```
-Setup Debian reboot check:
+Setup Debian check reboot:
 
 ```sh
-wget https://raw.githubusercontent.com/grom07/bash_scripts/master/reboot%3F.sh
-chmod +x reboot?.sh
-sudo mv reboot?.sh /usr/local/bin/reboot?
+wget https://raw.githubusercontent.com/grom07/bash_scripts/master/chkreboot.sh
+chmod +x chkreboot.sh
+sudo mv chkreboot.sh /usr/local/bin/chkreboot
 ```
