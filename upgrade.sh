@@ -2,7 +2,8 @@
 
 TEXT_RESET='\e[0m'
 TEXT_YELLOW='\e[0;33m'
-TEXT_RED_B='\e[1;31m'
+TEXT_RED='\e[1;31m'
+TEXT_GREEN='\e[1;32m'
 
 sudo apt-get update
 echo -e $TEXT_YELLOW
@@ -25,7 +26,7 @@ echo 'APT auto remove finished...'
 echo -e $TEXT_RESET
 
 if [ -f /var/run/reboot-required ]; then
-    echo -e $TEXT_RED_B
+    echo -e $TEXT_RED
     echo 'Reboot required!'
     echo ""
     echo 'Reboot now? (y/n)' && read x && [[ "$x" == "y" ]] && sudo reboot now;
