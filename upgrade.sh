@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Grom’s System Update Utility v1.2
 # Interactive upgrade script for Debian-based systems (uses apt)
+# Clean obsolete cached packages with: upgrade --clean
 
 set -Eeuo pipefail
 
