@@ -1,41 +1,50 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# upgrade: interactive apt maintenance for Debian-based systems
 
-TEXT_RESET='\e[0m'
-TEXT_YELLOW='\e[0;33m'
-TEXT_RED='\e[1;31m'
-TEXT_GREEN='\e[1;32m'
+set -Eeuo pipefail
 
-sudo apt-get update
-echo -e $TEXT_YELLOW
-echo 'APT update finished...'
-echo -e $TEXT_RESET
-
-sudo apt-get dist-upgrade -y
-echo -e $TEXT_YELLOW
-echo 'APT distributive upgrade finished...'
-echo -e $TEXT_RESET
-
-sudo apt-get upgrade -y
-echo -e $TEXT_YELLOW
-echo 'APT upgrade finished...'
-echo -e $TEXT_RESET
-
-sudo apt-get autoremove -y
-echo -e $TEXT_YELLOW
-echo 'APT auto remove finished...'
-echo -e $TEXT_RESET
-
-if [ -f /var/run/reboot-required ]; then
-    echo -e $TEXT_RED
-    echo 'Reboot required!'
-    echo ""
-    echo 'Reboot now? (y/n)' && read x && [[ "$x" == "y" ]] && sudo reboot now;
-    echo ""
-    echo -e $TEXT_RESET
+# Privilege helper
+if [[ ${EUID:-$(id -u)} -ne 0 ]]; then
+  SUDO="sudo"
 else
-    echo -e $TEXT_GREEN
-    echo 'No reboot required...'
-    printf 'Have a good day \e[33m\U1F600\n'
-    echo ""
-    echo -e $TEXT_RESET
+  SUDO=""
+fi
+
+# Colours, only when on a TTY
+if [[ -t 1 ]] && command -v tput >/dev/null 2>&1; then
+  YELLOW=$(tput setaf 3 || true)
+  RED=$(tput bold; tput setaf 1 || true)
+  GREEN=$(tput bold; tput setaf 2 || true)
+  RESET=$(tput sgr0 || true)
+else
+  YELLOW=""; RED=""; GREEN=""; RESET=""
+fi
+trap 'printf "%s" "$RESET" >/dev/null 2>&1 || true' EXIT
+
+msg() { printf "%b%s%b\n" "$1" "$2" "$RESET"; }
+
+msg "$YELLOW" "Refreshing package lists…"
+$SUDO apt update
+
+msg "$YELLOW" "Applying full upgrade…"
+$SUDO apt -y full-upgrade
+
+msg "$YELLOW" "Removing unused packages…"
+$SUDO apt -y autoremove
+
+msg "$YELLOW" "Cleaning local package cache…"
+$SUDO apt -y autoclean
+
+REBOOT_FLAG="/var/run/reboot-required"
+if [[ -f "$REBOOT_FLAG" ]]; then
+  msg "$RED" "Reboot required."
+  if [[ -t 0 ]]; then
+    printf "Reboot now? [y/N]: "
+    read -r ans
+    [[ "${ans,,}" =~ ^y(es)?$ ]] && exec $SUDO reboot now
+  else
+    msg "$YELLOW" "Non-interactive session detected, please reboot when convenient."
+  fi
+else
+  msg "$GREEN" "No reboot required. Have a good day $(printf '\U1F600')"
 fi
