@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Grom's System Maintenance Utility v1.2
+# Grom’s System Update Utility v1.2
 # Interactive upgrade script for Debian-based systems (uses apt)
 
 set -Eeuo pipefail
@@ -37,7 +37,7 @@ msg() { printf "%b%s%b\n" "$1" "$2" "$RESET"; }
 # -------- banner --------
 if [[ -t 1 ]]; then
   printf "%b%s%b\n" "$BLUE" "────────────────────────────────────────────────────────" "$RESET"
-  printf "%b%s%b\n" "$BLUE" "   Grom's System Maintenance Utility v1.2" "$RESET"
+  printf "%b%s%b\n" "$BLUE" "   Grom’s System Update Utility v1.2" "$RESET"
   printf "%b%s%b\n\n" "$BLUE" "────────────────────────────────────────────────────────" "$RESET"
 fi
 
